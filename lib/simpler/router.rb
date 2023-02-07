@@ -34,7 +34,7 @@ module Simpler
       route = Route.new(method, path, controller, action)
 
       @routes.push(route)     
-       
+    
     end
 
     def controller_from_string(controller_name)
