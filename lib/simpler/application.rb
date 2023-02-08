@@ -36,11 +36,11 @@ module Simpler
     end
 
     def require_app
-      
+      Dir["#{Simpler.root}/app/**/*.rb"].each { |file| require file }
     end
 
     def require_routes
-      
+      require Simpler.root.join('config/routes')
     end
   end
 end
