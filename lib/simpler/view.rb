@@ -1,5 +1,9 @@
+require 'byebug'
 module Simpler
   class View
+
+    VIEW_BASE_PATH = 'app/views'.freeze
+
     def initialize(env)
       @env = env
     end
@@ -10,8 +14,22 @@ module Simpler
 
     private
 
+    def controller
+      @env['simpler.controller']
+    end
+
+    def action
+      @env['simpler.action']
+    end
+
+    def template
+      @env['simpler.template']
+    end
+
     def template_path
-      Simpler.root.join('app/views/tests/index.html')
+      path = template || [controller.name, action].join('/')
+      byebug
+      Simpler.root.join( VIEW_BASE_PATH, "#{path}.html")
     end
   end
   

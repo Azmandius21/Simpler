@@ -1,21 +1,33 @@
 require_relative 'view'
+require 'byebug'
 
 module Simpler
   class Controller
 
+    attr_reader :name
+
     def initialize(env)
+      @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
       
     end
 
     def make_response(action)
+      @request.env['simpler.controller'] = self
+      @request.env['simpler.action'] = action
+
       set_default_headers 
+      send(action)
       write_response
       @response.finish
     end
     
     private
+
+    def extract_name
+      self.class.name.match('(?<name>.+)Controller')[:name].downcase
+    end
 
     def set_default_headers
       @response.set_header('Content-Type','text/html')
@@ -28,6 +40,10 @@ module Simpler
 
     def render_body
       View.new(@request.env).render
+    end
+
+    def render(template)
+      @request.env['simpler.template'] = template
     end
   end
   
